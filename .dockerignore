@@ -1,0 +1,27 @@
+# Git
+.git
+.gitignore
+.github
+
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+venv
+.env
+.env.*
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+
+# Project specific
+uploads/*
+tests
+README.md
+docker-compose.yml
+Dockerfile
