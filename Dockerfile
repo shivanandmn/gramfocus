@@ -26,10 +26,9 @@ RUN apt-get update \
 # Copy project files
 COPY . .
 
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt && \ pip install .
-
-
+# Install Python dependencies and package
+RUN pip install --no-cache-dir -r requirements.txt && \
+    pip install .
 
 # Create uploads directory
 RUN mkdir -p uploads && chmod 777 uploads
