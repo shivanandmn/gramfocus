@@ -4,7 +4,9 @@ from typing import Dict, List
 from dotenv import load_dotenv
 from app.services.llm_services import get_llm_service, GeminiService
 from app.core.prompts import create_grammar_analysis_prompt
+from app.models.grammar import GrammarAnalysis, GrammarCorrection
 import json
+from json_repair import repair_json
 
 load_dotenv()
 
@@ -40,15 +42,15 @@ class GrammarAnalysisService:
             rules.append(f"- {row['Mistake Title']}: {row['Why it Happens']}")
         return "\n".join(rules)
 
-    def _sort_corrections(self, corrections: List[Dict]) -> List[Dict]:
+    def _sort_corrections(self, corrections: List[GrammarCorrection]) -> List[GrammarCorrection]:
         """
         Sort corrections based on frequency of class and mistake_title
         
         Args:
-            corrections (List[Dict]): List of correction dictionaries
+            corrections (List[GrammarCorrection]): List of correction objects
             
         Returns:
-            List[Dict]: Sorted list of corrections
+            List[GrammarCorrection]: Sorted list of corrections
         """
         # Count occurrences of classes
         class_counts = {}
@@ -56,25 +58,22 @@ class GrammarAnalysisService:
         
         # Count frequencies
         for correction in corrections:
-            mistake_class = correction.get('mistake_class', 'Unknown')
-            mistake_title = correction.get('mistake_title', 'Unknown')
-            
-            class_counts[mistake_class] = class_counts.get(mistake_class, 0) + 1
-            title_counts[mistake_title] = title_counts.get(mistake_title, 0) + 1
+            class_counts[correction.mistake_class] = class_counts.get(correction.mistake_class, 0) + 1
+            title_counts[correction.mistake_title] = title_counts.get(correction.mistake_title, 0) + 1
         
         # Sort corrections based on class count first, then mistake_title count
         sorted_corrections = sorted(
             corrections,
             key=lambda x: (
-                class_counts.get(x.get('mistake_class', 'Unknown'), 0),
-                title_counts.get(x.get('mistake_title', 'Unknown'), 0)
+                class_counts.get(x.mistake_class, 0),
+                title_counts.get(x.mistake_title, 0)
             ),
             reverse=True  # Sort in descending order
         )
         
         return sorted_corrections
 
-    async def analyze_text(self, text: str, provider: str = None, model: str = None) -> Dict:
+    async def analyze_text(self, text: str, provider: str = None, model: str = None) -> GrammarAnalysis:
         """
         Analyze text for grammar mistakes
         
@@ -84,7 +83,7 @@ class GrammarAnalysisService:
             model: Optional model name to use
         
         Returns:
-            Dict: Analysis results including corrections and overview
+            GrammarAnalysis: Analysis results including corrections and improved version
         """
         # Get or create LLM service with specified provider and model
         self.llm_service = get_llm_service(provider=provider, model=model)
@@ -94,40 +93,49 @@ class GrammarAnalysisService:
         
         # Get analysis from LLM
         if isinstance(self.llm_service, GeminiService):
-            analysis = await self.llm_service.analyze_grammar(text, rules_context)
+            analysis_dict = await self.llm_service.analyze_grammar(text, rules_context)
         else:
             response = await self.llm_service.generate_response(
                 create_grammar_analysis_prompt(text, rules_context)
             )
             try:
                 # Try to parse the JSON response
-                json_response = json.loads(response)
-                analysis = json_response
+                analysis_dict = json.loads(response)
             except json.JSONDecodeError:
                 # Try to repair and parse the JSON
                 try:
                     repaired_json = repair_json(response)
-                    json_response = json.loads(repaired_json)
-                    analysis = json_response
+                    analysis_dict = json.loads(repaired_json)
                 except:
-                    return {
-                        "corrections": [],
-                        "overview": "Error analyzing grammar"
-                    }
+                    return GrammarAnalysis(
+                        corrections=[],
+                        improved_version="Error analyzing grammar"
+                    )
         
-        # Add mistake classes based on titles
-        if 'corrections' in analysis:
-            for correction in analysis['corrections']:
-                mistake_title = correction.get('mistake_title')
-                if mistake_title in self.title_to_class_map:
-                    correction['mistake_class'] = self.title_to_class_map[mistake_title]
-                else:
-                    correction['mistake_class'] = "Unknown"  # Fallback if title not found
+        # Add mistake classes based on titles and create GrammarCorrection objects
+        corrections = []
+        if 'corrections' in analysis_dict:
+            for corr in analysis_dict['corrections']:
+                mistake_title = corr.get('mistake_title')
+                mistake_class = self.title_to_class_map.get(mistake_title, "Unknown")
+                
+                correction = GrammarCorrection(
+                    original=corr.get('original', ''),
+                    correction=corr.get('correction', ''),
+                    reason=corr.get('reason', ''),
+                    mistake_title=mistake_title,
+                    mistake_class=mistake_class
+                )
+                corrections.append(correction)
             
             # Sort the corrections based on frequency
-            analysis['corrections'] = self._sort_corrections(analysis['corrections'])
+            corrections = self._sort_corrections(corrections)
         
-        return analysis
+        # Create and return GrammarAnalysis object
+        return GrammarAnalysis(
+            corrections=corrections,
+            improved_version=analysis_dict.get('improved_version', text)
+        )
 
 async def test_grammar_analysis():
     """Test the GrammarAnalysisService with real-world text"""
@@ -161,19 +169,19 @@ So the data I'm taking is we are using with column to add location column and we
             return
             
         print("\nGrammar Corrections:")
-        for i, correction in enumerate(result['corrections'], 1):
+        for i, correction in enumerate(result.corrections, 1):
             print(f"\n{i}. Correction:")
-            print(f"   Original: {correction['original']}")
-            print(f"   Corrected: {correction['correction']}")
-            print(f"   Explanation: {correction['reason']}")
-            print(f"   Mistake Title: {correction['mistake_title']}")
-            print(f"   Mistake Class: {correction['mistake_class']}")
+            print(f"   Original: {correction.original}")
+            print(f"   Corrected: {correction.correction}")
+            print(f"   Explanation: {correction.reason}")
+            print(f"   Mistake Title: {correction.mistake_title}")
+            print(f"   Mistake Class: {correction.mistake_class}")
         
         print("\nImproved Version Preview:")
-        print(result['improved_version'][:200] + "...")  # Show first 200 chars
+        print(result.improved_version[:200] + "...")  # Show first 200 chars
         
         print("\nOverview of Issues:")
-        print(result['overview'])
+        print(result.overview)
         
         print("\n=== Grammar Analysis Test Completed ===")
         

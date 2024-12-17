@@ -10,6 +10,7 @@ class GrammarCorrection(BaseModel):
     correction: str = Field(..., description="The corrected version of the text")
     reason: str = Field(..., description="Reason why the correction is needed by comparing original and corrected text")
     mistake_title: str = Field(..., description="The exact title of the grammar mistake from the list of rules")
+    mistake_class: str = Field(..., description="The class of the grammar mistake")
 
 
 class GrammarAnalysis(BaseModel):
