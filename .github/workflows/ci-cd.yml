@@ -18,9 +18,6 @@ jobs:
   build-and-deploy:
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
-    permissions:
-      contents: 'read'
-      id-token: 'write'
     
     steps:
     - uses: actions/checkout@v3
@@ -33,11 +30,6 @@ jobs:
       uses: 'google-github-actions/auth@v1'
       with:
         credentials_json: '${{ secrets.GCP_SA_KEY }}'
-        service_account: '${{ secrets.GCP_SA_EMAIL }}'
-        token_format: 'access_token'
-        create_credentials_file: true
-        export_environment_variables: true
-        cleanup_credentials: true
 
     - name: Create Artifact Registry Repository
       run: |
