@@ -2,10 +2,10 @@ from fastapi import APIRouter, UploadFile, File, HTTPException, Query
 from pathlib import Path
 import aiofiles
 import os
-from ..services.transcription import get_transcription_service
-from ..services.grammar_analysis import GrammarAnalysisService
-from ..core.config import LLMProvider, TranscriptionProvider, get_settings
-from ..models.grammar import GrammarAnalysis, TranscriptAnalysisRequest
+from app.services.transcription import get_transcription_service
+from app.services.grammar_analysis import GrammarAnalysisService
+from app.core.config import LLMProvider, TranscriptionProvider, get_settings
+from app.models.grammar import GrammarAnalysis, TranscriptAnalysisRequest
 
 router = APIRouter()
 transcription_service = get_transcription_service()

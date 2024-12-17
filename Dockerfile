@@ -23,14 +23,13 @@ RUN apt-get update \
         libsndfile1 \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements file
-COPY requirements.txt .
-
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
-
 # Copy project files
 COPY . .
+
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt && \ pip install .
+
+
 
 # Create uploads directory
 RUN mkdir -p uploads && chmod 777 uploads

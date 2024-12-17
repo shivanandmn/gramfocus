@@ -20,3 +20,5 @@ pydantic-settings>=2.1.0
 
 # JSON Processing
 json-repair>=0.30.2
+
+pandas>=2.2.3

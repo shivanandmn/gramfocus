@@ -1,31 +1,33 @@
 from setuptools import setup, find_packages
 
+# Read requirements from requirements.txt
+with open('requirements.txt') as f:
+    requirements = [line.strip() for line in f if line.strip() and not line.startswith('#')]
+
 setup(
     name="gramfocus",
-    version="0.1",
+    version="0.1.0",
+    description="A grammar analysis tool using AI for speech transcription and correction",
+    author="Your Name",
+    author_email="your.email@example.com",
     packages=find_packages(),
-    install_requires=[
-        # API and Web Server
-        "fastapi>=0.104.1",
-        "uvicorn>=0.24.0",
-        "python-multipart>=0.0.6",
-        
-        # LLM Services
-        "openai>=1.3.5",
-        "google-generativeai>=0.3.1",
-        
-        # Speech-to-Text
-        "google-cloud-speech>=2.21.0",
-        
-        # File Handling
-        "aiofiles>=23.2.1",
-        
-        # Configuration and Validation
-        "python-dotenv>=1.0.0",
-        "pydantic>=2.5.2",
-        "pydantic-settings>=2.1.0",
-        
-        # JSON Processing
-        "json-repair>=0.30.2",
-    ]
+    include_package_data=True,
+    python_requires=">=3.8",
+    install_requires=requirements,
+    classifiers=[
+        "Development Status :: 3 - Alpha",
+        "Intended Audience :: Education",
+        "License :: OSI Approved :: MIT License",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Topic :: Education",
+        "Topic :: Text Processing :: Linguistic",
+    ],
+    entry_points={
+        'console_scripts': [
+            'gramfocus=app.main:main',
+        ],
+    },
 )

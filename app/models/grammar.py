@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 from typing import List
-from ..core.config import LLMProvider
+from app.core.config import LLMProvider
 
 
 class GrammarCorrection(BaseModel):
