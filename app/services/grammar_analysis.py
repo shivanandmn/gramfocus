@@ -2,7 +2,7 @@ import os
 import pandas as pd
 from typing import Dict, List
 from dotenv import load_dotenv
-from app.services.llm_services import get_llm_service, GeminiService
+from app.services.llm_services import get_llm_service, GeminiService, OpenAIService
 from app.core.prompts import create_grammar_analysis_prompt
 from app.models.grammar import GrammarAnalysis, GrammarCorrection
 import json
@@ -92,7 +92,7 @@ class GrammarAnalysisService:
         rules_context = self._create_rules_context()
         
         # Get analysis from LLM - both services already validate and return GrammarAnalysis
-        if isinstance(self.llm_service, GeminiService):
+        if isinstance(self.llm_service, (GeminiService, OpenAIService)):
             return await self.llm_service.analyze_grammar(text, rules_context)
         else:
             response = await self.llm_service.generate_response(
