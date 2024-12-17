@@ -7,25 +7,44 @@ on:
     branches: [ main ]
 
 jobs:
-  deploy:
+  build-and-deploy:
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
     
     steps:
     - uses: actions/checkout@v3
 
-    # Setup gcloud CLI with deployment service account
+    - name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@v1
+
     - id: 'auth'
       name: 'Authenticate to Google Cloud'
       uses: 'google-github-actions/auth@v1'
       with:
         credentials_json: '${{ secrets.GCP_SA_KEY }}'
-        
-    # Add deployment status check
+
+    - name: Configure Docker
+      run: |
+        gcloud auth configure-docker
+
+    - name: Build and Push Docker image
+      run: |
+        docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/gramfocus:${{ github.sha }} .
+        docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/gramfocus:${{ github.sha }}
+
+    - name: Deploy to Cloud Run
+      run: |
+        gcloud run deploy gramfocus \
+          --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/gramfocus:${{ github.sha }} \
+          --platform managed \
+          --region us-central1 \
+          --allow-unauthenticated
+
     - name: Verify deployment
       id: deploy
       run: |
-        if [ $? -eq 0 ]; then
+        DEPLOY_STATUS=$(gcloud run services describe gramfocus --platform managed --region us-central1 --format='get(status.conditions[0].status)')
+        if [ "$DEPLOY_STATUS" = "True" ]; then
           echo "::set-output name=status::success"
         else
           echo "::set-output name=status::failure"
