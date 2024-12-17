@@ -28,22 +28,29 @@ jobs:
         gcloud auth configure-docker
 
     - name: Build and Push Docker image
+      env:
+        PROJECT_ID: openlabel-lab-firebase
       run: |
-        docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/gramfocus:${{ github.sha }} .
-        docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/gramfocus:${{ github.sha }}
+        docker build -t gcr.io/${PROJECT_ID}/gramfocus:${{ github.sha }} .
+        docker push gcr.io/${PROJECT_ID}/gramfocus:${{ github.sha }}
 
     - name: Deploy to Cloud Run
+      env:
+        PROJECT_ID: openlabel-lab-firebase
       run: |
         gcloud run deploy gramfocus \
-          --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/gramfocus:${{ github.sha }} \
+          --image gcr.io/${PROJECT_ID}/gramfocus:${{ github.sha }} \
           --platform managed \
           --region us-central1 \
+          --project ${PROJECT_ID} \
           --allow-unauthenticated
 
     - name: Verify deployment
       id: deploy
+      env:
+        PROJECT_ID: openlabel-lab-firebase
       run: |
-        DEPLOY_STATUS=$(gcloud run services describe gramfocus --platform managed --region us-central1 --format='get(status.conditions[0].status)')
+        DEPLOY_STATUS=$(gcloud run services describe gramfocus --platform managed --region us-central1 --project ${PROJECT_ID} --format='get(status.conditions[0].status)')
         if [ "$DEPLOY_STATUS" = "True" ]; then
           echo "::set-output name=status::success"
         else
