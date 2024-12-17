@@ -1,5 +1,6 @@
 from pydantic import BaseModel, Field
 from typing import List
+from ..core.config import LLMProvider
 
 
 class GrammarCorrection(BaseModel):
@@ -23,4 +24,18 @@ class GrammarAnalysis(BaseModel):
     overview: str = Field(
         ...,
         description="What is the most important that needs to be learnt from these mistakes, explain",
+    )
+
+
+class TranscriptAnalysisRequest(BaseModel):
+    """Model for transcript analysis request"""
+    
+    transcript: str = Field(..., description="The transcript text to analyze")
+    llm_provider: LLMProvider = Field(
+        default=LLMProvider.OPENAI,
+        description="LLM provider to use for grammar analysis (openai/gemini)"
+    )
+    model_name: str | None = Field(
+        None, 
+        description="Specific model name to use (e.g., 'gpt-4-mini' for OpenAI or 'gemini-pro' for Gemini)"
     )

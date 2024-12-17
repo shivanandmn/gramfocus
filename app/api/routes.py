@@ -5,6 +5,7 @@ import os
 from ..services.transcription import get_transcription_service
 from ..services.grammar_analysis import GrammarAnalysisService
 from ..core.config import LLMProvider, TranscriptionProvider, get_settings
+from ..models.grammar import GrammarAnalysis, TranscriptAnalysisRequest
 
 router = APIRouter()
 transcription_service = get_transcription_service()
@@ -87,5 +88,46 @@ async def analyze_audio(
                 }
             }
         }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/analyze-transcript", response_model=GrammarAnalysis)
+async def analyze_transcript(
+    request: TranscriptAnalysisRequest
+):
+    """
+    Endpoint to analyze transcript text directly for grammar mistakes
+    
+    Args:
+        request: TranscriptAnalysisRequest containing:
+            - transcript: The text to analyze
+            - llm_provider: Which LLM provider to use (openai/gemini)
+            - model_name: Optional specific model name to use
+    
+    Returns:
+        GrammarAnalysis: Analysis results including corrections and improved version
+    """
+    try:
+        settings = get_settings()
+        
+        # Get the model name based on provider
+        model_name = request.model_name
+        if not model_name:
+            # Use default models based on provider
+            model_name = (
+                settings.OPENAI_CHAT_MODEL 
+                if request.llm_provider == LLMProvider.OPENAI
+                else settings.GEMINI_MODEL
+            )
+        
+        # Perform grammar analysis
+        analysis_result = await grammar_service.analyze_text(
+            request.transcript,
+            provider=request.llm_provider,
+            model=model_name
+        )
+        
+        return analysis_result
+        
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
