@@ -1,0 +1,137 @@
+=== Testing Grammar Analysis ===
+
+Input text:
+
+    Hi everybody, welcome back to the channel. Today we are going to solve another five spark question and this question was asking like you can expect this question in almost every MNCs and this is the most ideal question for a fresher or a person who is having experience around one or two years of experience in data engineering. So this is generally to test your knowledge in basics of five spark in this part basically. 
+
+So let's see the question. So the question is you need to return the details of employee whose location is not in Bangalore. So if you see the employee ID name location column, you have two employee with the locations Pune, Bangalore, Hyderabad and Mumbai, Bangalore, Pune. 
+
+So you need to return the detail of employee whose location is not in Bangalore. So first you need to unpack this list of location and have it as an individual row and then you need to filter out that location should not be equal to Bangalore. So this is how we are going to solve this question. 
+
+You see I have already imported a spark session and you can have your spark SQL functions import. Then I'm creating a spark session with a spark session dot builder dot get or create. First we will create a data frame.
+
+So the data I'm taking is we are using with column to add location column and we are doing explode, which is like a splitting the locations into a different individual rows using a split splitting based on the column. Then we are displaying our final data frame in that we are selecting the columns that we want in this case employee ID name and location and we are doing the filter where the location is not equal to Bangalore. So this is our final output. 
+
+If you like this video, please subscribe to the channel and follow for more content like this. Till then see you in the next one. Bye.
+    
+
+🔵 OpenAI Analysis:
+{
+  "corrections": [
+    {
+      "original": "another five spark question",
+      "correction": "another five Spark questions",
+      "explanation": "The term 'Spark' should be capitalized as it is a proper noun. Additionally, 'questions' should be plural to match 'another five'."
+    },
+    {
+      "original": "you can expect this question in almost every MNCs",
+      "correction": "you can expect this question in almost every MNC",
+      "explanation": "The term 'MNCs' is plural, but 'every' should be followed by a singular noun. It should be 'MNC'."
+    },
+    {
+      "original": "a person who is having experience around one or two years of experience",
+      "correction": "a person who has around one or two years of experience",
+      "explanation": "The phrase 'is having' is incorrect in this context. The simple present 'has' is more appropriate."
+    },
+    {
+      "original": "in basics of five spark in this part basically.",
+      "correction": "in the basics of Spark in this part.",
+      "explanation": "The definite article 'the' is needed before 'basics', and 'Spark' should be capitalized. The word 'basically' is redundant."
+    },
+    {
+      "original": "you need to return the detail of employee whose location is not in Bangalore.",
+      "correction": "you need to return the details of the employees whose location is not in Bangalore.",
+      "explanation": "The word 'detail' should be pluralized to 'details', and 'the employees' is more appropriate than 'employee' for consistency."
+    },
+    {
+      "original": "you have two employee with the locations Pune, Bangalore, Hyderabad and Mumbai, Bangalore, Pune.",
+      "correction": "you have two employees with the locations Pune, Bangalore, Hyderabad, and Mumbai.",
+      "explanation": "The word 'employee' should be pluralized to 'employees'. A comma is needed before 'and' in the list."
+    },
+    {
+      "original": "So you need to return the detail of employee whose location is not in Bangalore.",
+      "correction": "So you need to return the details of the employees whose location is not in Bangalore.",
+      "explanation": "This sentence is a repetition of a previous error. The same corrections apply."
+    },
+    {
+      "original": "you need to unpack this list of location and have it as an individual row",
+      "correction": "you need to unpack this list of locations and have them as individual rows.",
+      "explanation": "The word 'location' should be pluralized to 'locations', and 'have it' should be changed to 'have them' for agreement in number."
+    },
+    {
+      "original": "Then we are displaying our final data frame in that we are selecting the columns that we want",
+      "correction": "Then we display our final DataFrame, in which we select the columns that we want.",
+      "explanation": "The verb tense should be consistent; changing 'are displaying' to 'display' maintains the present tense. 'DataFrame' should be capitalized as it is a proper noun. 'In that' should be changed to 'in which'."
+    },
+    {
+      "original": "we are doing the filter where the location is not equal to Bangalore.",
+      "correction": "we filter where the location is not equal to Bangalore.",
+      "explanation": "The phrase 'doing the filter' is awkward; 'filter' alone is sufficient and more concise."
+    },
+    {
+      "original": "please subscribe to the channel and follow for more content like this.",
+      "correction": "please subscribe to the channel and follow us for more content like this.",
+      "explanation": "Adding 'us' clarifies who the audience should follow."
+    }
+  ],
+  "improved_version": "Hi everybody, welcome back to the channel. Today we are going to solve another five Spark questions and this question was asking like you can expect this question in almost every MNC and this is the most ideal question for a fresher or a person who has around one or two years of experience in data engineering. So this is generally to test your knowledge in the basics of Spark in this part. \n\nSo let's see the question. The question is you need to return the details of the employees whose location is not in Bangalore. If you see the employee ID, name, and location columns, you have two employees with the locations Pune, Bangalore, Hyderabad, and Mumbai. \n\nSo you need to return the details of the employees whose location is not in Bangalore. First, you need to unpack this list of locations and have them as individual rows. Then you need to filter where the location is not equal to Bangalore. This is how we are going to solve this question. \n\nYou see I have already imported a Spark session, and you can have your Spark SQL functions imported. Then I'm creating a Spark session with a Spark session dot builder dot get or create. First, we will create a DataFrame. \n\nSo the data I'm taking is we are using with column to add the location column and we are doing explode, which is like splitting the locations into different individual rows using a split based on the column. Then we display our final DataFrame, in which we select the columns that we want, in this case, employee ID, name, and location, and we filter where the location is not equal to Bangalore. So this is our final output. \n\nIf you like this video, please subscribe to the channel and follow us for more content like this. Till then see you in the next one. Bye.",
+  "overview": "The most important takeaway from these corrections is the need for subject-verb agreement, proper noun capitalization, and maintaining consistency in pluralization when discussing multiple items."
+}
+
+🟢 Gemini Analysis:
+{
+  "corrections": [
+    {
+      "original": "Today we are going to solve another five spark question and this question was asking like you can expect this question in almost every MNCs and this is the most ideal question for a fresher or a person who is having experience around one or two years of experience in data engineering.",
+      "correction": "Today we are going to solve another Spark question. This question is commonly asked in MNCs and is an ideal question for a fresher or a person who has around one or two years of experience in data engineering.",
+      "explanation": "The sentence has multiple grammatical errors, including incorrect verb tense, subject-verb agreement, and missing articles."
+    },
+    {
+      "original": "So this is generally to test your knowledge in basics of five spark in this part basically.",
+      "correction": "This is generally to test your basic knowledge of Spark.",
+      "explanation": "The sentence is redundant and contains unnecessary phrases."
+    },
+    {
+      "original": "So the question is you need to return the details of employee whose location is not in Bangalore.",
+      "correction": "The question is to return the details of employees whose location is not Bangalore.",
+      "explanation": "The sentence has an incorrect subject-verb agreement and missing articles."
+    },
+    {
+      "original": "So if you see the employee ID name location column, you have two employee with the locations Pune, Bangalore, Hyderabad and Mumbai, Bangalore, Pune.",
+      "correction": "In the 'employee ID name location' column, you have two employees with the locations Pune, Bangalore, Hyderabad, and Mumbai, Bangalore, Pune.",
+      "explanation": "The sentence has incorrect subject-verb agreement, missing articles, and incorrect punctuation."
+    },
+    {
+      "original": "So you need to return the detail of employee whose location is not in Bangalore.",
+      "correction": "So you need to return the details of employees whose location is not Bangalore.",
+      "explanation": "The sentence has an incorrect subject-verb agreement and missing articles."
+    },
+    {
+      "original": "So first you need to unpack this list of location and have it as an individual row and then you need to filter out that location should not be equal to Bangalore.",
+      "correction": "First, you need to unpack this list of locations and have each location as an individual row. Then, you need to filter out locations that are not equal to Bangalore.",
+      "explanation": "The sentence has incorrect verb tense and missing articles."
+    },
+    {
+      "original": "So this is how we are going to solve this question.",
+      "correction": "This is how we are going to solve this question.",
+      "explanation": "The sentence is redundant."
+    },
+    {
+      "original": "Then I'm creating a spark session with a spark session dot builder dot get or create.",
+      "correction": "Then, I am creating a Spark session with a Spark session dot builder dot get or create.",
+      "explanation": "The sentence has incorrect punctuation and missing articles."
+    },
+    {
+      "original": "So the data I'm taking is we are using with column to add location column and we are doing explode, which is like a splitting the locations into a different individual rows using a split splitting based on the column.",
+      "correction": "The data I am using has a 'location' column. We are using explode to split the locations into different individual rows using a split based on the column.",
+      "explanation": "The sentence has incorrect verb tense, missing articles, and incorrect phrasing."
+    },
+    {
+      "original": "Then we are displaying our final data frame in that we are selecting the columns that we want in this case employee ID name and location and we are doing the filter where the location is not equal to Bangalore.",
+      "correction": "Then, we are displaying our final data frame, selecting the columns we want (employee ID, name, and location), and filtering the data to include only locations that are not equal to Bangalore.",
+      "explanation": "The sentence has incorrect verb tense, missing articles, and incorrect phrasing."
+    }
+  ],
+  "improved_version": "Hi everybody, welcome back to the channel. Today we are going to solve another Spark question. This question is commonly asked in MNCs and is an ideal question for a fresher or a person who has around one or two years of experience in data engineering.\n\nThis is generally to test your basic knowledge of Spark.\n\nThe question is to return the details of employees whose location is not Bangalore.\n\nIn the 'employee ID name location' column, you have two employees with the locations Pune, Bangalore, Hyderabad, and Mumbai, Bangalore, Pune.\n\nSo you need to return the details of employees whose location is not Bangalore.\n\nFirst, you need to unpack this list of locations and have each location as an individual row. Then, you need to filter out locations that are not equal to Bangalore.\n\nThis is how we are going to solve this question.\n\nThen, I am creating a Spark session with a Spark session dot builder dot get or create.\n\nThe data I am using has a 'location' column. We are using explode to split the locations into different individual rows using a split based on the column.\n\nThen, we are displaying our final data frame, selecting the columns we want (employee ID, name, and location), and filtering the data to include only locations that are not equal to Bangalore.",
+  "overview": "The most important thing to learn from these mistakes is to pay attention to grammar rules, including subject-verb agreement, correct verb tense, and proper use of articles and punctuation. Additionally, avoiding redundancy and using clear and concise language can enhance the overall quality of writing."
+}

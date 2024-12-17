@@ -10,6 +10,7 @@ import os
 from dotenv import load_dotenv
 from json_repair import repair_json
 from pydantic import ValidationError
+import asyncio
 
 # Load environment variables from .env file
 load_dotenv()
@@ -66,8 +67,10 @@ class OpenAIService(LLMService):
             
             response = await self.client.chat.completions.create(**params)
             
-            # Parse and validate response
+            # Parse response
             json_response = json.loads(response.choices[0].message.content)
+            
+            # Validate response structure
             validated_response = GrammarAnalysis(**json_response)
             return validated_response.model_dump()
             
@@ -154,19 +157,25 @@ def get_llm_service() -> LLMService:
     else:
         raise ValueError(f"Unsupported LLM provider: {settings.LLM_PROVIDER}")
 
-import asyncio
-
 async def test_both_services():
     """Test both OpenAI and Gemini services with the same input"""
-    # Initialize both services
+    settings = get_settings()
     openai_service = OpenAIService()
     gemini_service = GeminiService()
     
     # Test text with intentional grammar mistakes
     test_text = """
-    1. She dont like ice cream
-    2. The cats is sleeping
-    3. He have went to the store
+    Hi everybody, welcome back to the channel. Today we are going to solve another five spark question and this question was asking like you can expect this question in almost every MNCs and this is the most ideal question for a fresher or a person who is having experience around one or two years of experience in data engineering. So this is generally to test your knowledge in basics of five spark in this part basically. 
+
+So let's see the question. So the question is you need to return the details of employee whose location is not in Bangalore. So if you see the employee ID name location column, you have two employee with the locations Pune, Bangalore, Hyderabad and Mumbai, Bangalore, Pune. 
+
+So you need to return the detail of employee whose location is not in Bangalore. So first you need to unpack this list of location and have it as an individual row and then you need to filter out that location should not be equal to Bangalore. So this is how we are going to solve this question. 
+
+You see I have already imported a spark session and you can have your spark SQL functions import. Then I'm creating a spark session with a spark session dot builder dot get or create. First we will create a data frame.
+
+So the data I'm taking is we are using with column to add location column and we are doing explode, which is like a splitting the locations into a different individual rows using a split splitting based on the column. Then we are displaying our final data frame in that we are selecting the columns that we want in this case employee ID name and location and we are doing the filter where the location is not equal to Bangalore. So this is our final output. 
+
+If you like this video, please subscribe to the channel and follow for more content like this. Till then see you in the next one. Bye.
     """
     
     print("\n=== Testing Grammar Analysis ===")

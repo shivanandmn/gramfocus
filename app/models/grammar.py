@@ -8,6 +8,7 @@ class GrammarCorrection(BaseModel):
     original: str = Field(..., description="The original text with grammar error")
     correction: str = Field(..., description="The corrected version of the text")
     explanation: str = Field(..., description="Explanation of the grammar issue")
+    mistake_title: str = Field(..., description="The exact title of the grammar mistake from the list of rules")
 
 
 class GrammarAnalysis(BaseModel):
