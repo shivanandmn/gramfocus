@@ -1,137 +1,310 @@
-=== Testing Grammar Analysis ===
+Analysis Results:
 
-Input text:
+Grammar Corrections:
 
-    Hi everybody, welcome back to the channel. Today we are going to solve another five spark question and this question was asking like you can expect this question in almost every MNCs and this is the most ideal question for a fresher or a person who is having experience around one or two years of experience in data engineering. So this is generally to test your knowledge in basics of five spark in this part basically. 
+1. Correction:
+   Original: another five spark question
+   Corrected: another five spark questions
+   Explanation: The noun 'question' should be pluralized to match 'five'.
+   Mistake Title: Pluralization Errors
+   Mistake Class: Miscellaneous Errors
 
-So let's see the question. So the question is you need to return the details of employee whose location is not in Bangalore. So if you see the employee ID name location column, you have two employee with the locations Pune, Bangalore, Hyderabad and Mumbai, Bangalore, Pune. 
+2. Correction:
+   Original: the details of employee whose location is not in Bangalore
+   Corrected: the details of employees whose location is not in Bangalore
+   Explanation: The noun 'employee' should be pluralized to agree with 'details'.
+   Mistake Title: Pluralization Errors
+   Mistake Class: Miscellaneous Errors
 
-So you need to return the detail of employee whose location is not in Bangalore. So first you need to unpack this list of location and have it as an individual row and then you need to filter out that location should not be equal to Bangalore. So this is how we are going to solve this question. 
+3. Correction:
+   Original: you have two employee with the locations Pune, Bangalore, Hyderabad and Mumbai, Bangalore, Pune.
+   Corrected: you have two employees with the locations Pune, Bangalore, Hyderabad, and Mumbai, Bangalore, Pune.
+   Explanation: The noun 'employee' should be pluralized to 'employees' to match the subject. Additionally, a comma is needed before 'and' for clarity.
+   Mistake Title: Pluralization Errors
+   Mistake Class: Miscellaneous Errors
 
-You see I have already imported a spark session and you can have your spark SQL functions import. Then I'm creating a spark session with a spark session dot builder dot get or create. First we will create a data frame.
+4. Correction:
+   Original: you need to return the detail of employee whose location is not in Bangalore
+   Corrected: you need to return the details of employees whose location is not in Bangalore
+   Explanation: The noun 'detail' should be pluralized to 'details', and 'employee' should be pluralized to 'employees'.
+   Mistake Title: Pluralization Errors
+   Mistake Class: Miscellaneous Errors
 
-So the data I'm taking is we are using with column to add location column and we are doing explode, which is like a splitting the locations into a different individual rows using a split splitting based on the column. Then we are displaying our final data frame in that we are selecting the columns that we want in this case employee ID name and location and we are doing the filter where the location is not equal to Bangalore. So this is our final output. 
+5. Correction:
+   Original: we are doing explode, which is like a splitting the locations into a different individual rows
+   Corrected: we are doing explode, which is like splitting the locations into different individual rows
+   Explanation: The article 'a' should be removed before 'splitting' and 'different' should not have the article for proper structure.
+   Mistake Title: Dropping Articles
+   Mistake Class: Article and Preposition Misuse
 
-If you like this video, please subscribe to the channel and follow for more content like this. Till then see you in the next one. Bye.
-    
+6. Correction:
+   Original: in that we are selecting the columns that we want in this case employee ID name and location
+   Corrected: in that we are selecting the columns that we want in this case employee ID, name, and location
+   Explanation: Commas should be used to separate items in a list for clarity.
+   Mistake Title: Incorrect Use of Articles with Uncountable Nouns
+   Mistake Class: Article and Preposition Misuse
 
-🔵 OpenAI Analysis:
-{
-  "corrections": [
-    {
-      "original": "another five spark question",
-      "correction": "another five Spark questions",
-      "explanation": "The term 'Spark' should be capitalized as it is a proper noun. Additionally, 'questions' should be plural to match 'another five'."
-    },
-    {
-      "original": "you can expect this question in almost every MNCs",
-      "correction": "you can expect this question in almost every MNC",
-      "explanation": "The term 'MNCs' is plural, but 'every' should be followed by a singular noun. It should be 'MNC'."
-    },
-    {
-      "original": "a person who is having experience around one or two years of experience",
-      "correction": "a person who has around one or two years of experience",
-      "explanation": "The phrase 'is having' is incorrect in this context. The simple present 'has' is more appropriate."
-    },
-    {
-      "original": "in basics of five spark in this part basically.",
-      "correction": "in the basics of Spark in this part.",
-      "explanation": "The definite article 'the' is needed before 'basics', and 'Spark' should be capitalized. The word 'basically' is redundant."
-    },
-    {
-      "original": "you need to return the detail of employee whose location is not in Bangalore.",
-      "correction": "you need to return the details of the employees whose location is not in Bangalore.",
-      "explanation": "The word 'detail' should be pluralized to 'details', and 'the employees' is more appropriate than 'employee' for consistency."
-    },
-    {
-      "original": "you have two employee with the locations Pune, Bangalore, Hyderabad and Mumbai, Bangalore, Pune.",
-      "correction": "you have two employees with the locations Pune, Bangalore, Hyderabad, and Mumbai.",
-      "explanation": "The word 'employee' should be pluralized to 'employees'. A comma is needed before 'and' in the list."
-    },
-    {
-      "original": "So you need to return the detail of employee whose location is not in Bangalore.",
-      "correction": "So you need to return the details of the employees whose location is not in Bangalore.",
-      "explanation": "This sentence is a repetition of a previous error. The same corrections apply."
-    },
-    {
-      "original": "you need to unpack this list of location and have it as an individual row",
-      "correction": "you need to unpack this list of locations and have them as individual rows.",
-      "explanation": "The word 'location' should be pluralized to 'locations', and 'have it' should be changed to 'have them' for agreement in number."
-    },
-    {
-      "original": "Then we are displaying our final data frame in that we are selecting the columns that we want",
-      "correction": "Then we display our final DataFrame, in which we select the columns that we want.",
-      "explanation": "The verb tense should be consistent; changing 'are displaying' to 'display' maintains the present tense. 'DataFrame' should be capitalized as it is a proper noun. 'In that' should be changed to 'in which'."
-    },
-    {
-      "original": "we are doing the filter where the location is not equal to Bangalore.",
-      "correction": "we filter where the location is not equal to Bangalore.",
-      "explanation": "The phrase 'doing the filter' is awkward; 'filter' alone is sufficient and more concise."
-    },
-    {
-      "original": "please subscribe to the channel and follow for more content like this.",
-      "correction": "please subscribe to the channel and follow us for more content like this.",
-      "explanation": "Adding 'us' clarifies who the audience should follow."
-    }
-  ],
-  "improved_version": "Hi everybody, welcome back to the channel. Today we are going to solve another five Spark questions and this question was asking like you can expect this question in almost every MNC and this is the most ideal question for a fresher or a person who has around one or two years of experience in data engineering. So this is generally to test your knowledge in the basics of Spark in this part. \n\nSo let's see the question. The question is you need to return the details of the employees whose location is not in Bangalore. If you see the employee ID, name, and location columns, you have two employees with the locations Pune, Bangalore, Hyderabad, and Mumbai. \n\nSo you need to return the details of the employees whose location is not in Bangalore. First, you need to unpack this list of locations and have them as individual rows. Then you need to filter where the location is not equal to Bangalore. This is how we are going to solve this question. \n\nYou see I have already imported a Spark session, and you can have your Spark SQL functions imported. Then I'm creating a Spark session with a Spark session dot builder dot get or create. First, we will create a DataFrame. \n\nSo the data I'm taking is we are using with column to add the location column and we are doing explode, which is like splitting the locations into different individual rows using a split based on the column. Then we display our final DataFrame, in which we select the columns that we want, in this case, employee ID, name, and location, and we filter where the location is not equal to Bangalore. So this is our final output. \n\nIf you like this video, please subscribe to the channel and follow us for more content like this. Till then see you in the next one. Bye.",
-  "overview": "The most important takeaway from these corrections is the need for subject-verb agreement, proper noun capitalization, and maintaining consistency in pluralization when discussing multiple items."
-}
+7. Correction:
+   Original: this question was asking like you can expect this question in almost every MNCs
+   Corrected: this question is asking like you can expect this question in almost every MNC
+   Explanation: The verb tense should be present 'is' instead of past 'was' to maintain consistency.
+   Mistake Title: Incorrect Use of Tenses
+   Mistake Class: Tense and Verb Form Errors
 
-🟢 Gemini Analysis:
-{
-  "corrections": [
-    {
-      "original": "Today we are going to solve another five spark question and this question was asking like you can expect this question in almost every MNCs and this is the most ideal question for a fresher or a person who is having experience around one or two years of experience in data engineering.",
-      "correction": "Today we are going to solve another Spark question. This question is commonly asked in MNCs and is an ideal question for a fresher or a person who has around one or two years of experience in data engineering.",
-      "explanation": "The sentence has multiple grammatical errors, including incorrect verb tense, subject-verb agreement, and missing articles."
-    },
-    {
-      "original": "So this is generally to test your knowledge in basics of five spark in this part basically.",
-      "correction": "This is generally to test your basic knowledge of Spark.",
-      "explanation": "The sentence is redundant and contains unnecessary phrases."
-    },
-    {
-      "original": "So the question is you need to return the details of employee whose location is not in Bangalore.",
-      "correction": "The question is to return the details of employees whose location is not Bangalore.",
-      "explanation": "The sentence has an incorrect subject-verb agreement and missing articles."
-    },
-    {
-      "original": "So if you see the employee ID name location column, you have two employee with the locations Pune, Bangalore, Hyderabad and Mumbai, Bangalore, Pune.",
-      "correction": "In the 'employee ID name location' column, you have two employees with the locations Pune, Bangalore, Hyderabad, and Mumbai, Bangalore, Pune.",
-      "explanation": "The sentence has incorrect subject-verb agreement, missing articles, and incorrect punctuation."
-    },
-    {
-      "original": "So you need to return the detail of employee whose location is not in Bangalore.",
-      "correction": "So you need to return the details of employees whose location is not Bangalore.",
-      "explanation": "The sentence has an incorrect subject-verb agreement and missing articles."
-    },
-    {
-      "original": "So first you need to unpack this list of location and have it as an individual row and then you need to filter out that location should not be equal to Bangalore.",
-      "correction": "First, you need to unpack this list of locations and have each location as an individual row. Then, you need to filter out locations that are not equal to Bangalore.",
-      "explanation": "The sentence has incorrect verb tense and missing articles."
-    },
-    {
-      "original": "So this is how we are going to solve this question.",
-      "correction": "This is how we are going to solve this question.",
-      "explanation": "The sentence is redundant."
-    },
-    {
-      "original": "Then I'm creating a spark session with a spark session dot builder dot get or create.",
-      "correction": "Then, I am creating a Spark session with a Spark session dot builder dot get or create.",
-      "explanation": "The sentence has incorrect punctuation and missing articles."
-    },
-    {
-      "original": "So the data I'm taking is we are using with column to add location column and we are doing explode, which is like a splitting the locations into a different individual rows using a split splitting based on the column.",
-      "correction": "The data I am using has a 'location' column. We are using explode to split the locations into different individual rows using a split based on the column.",
-      "explanation": "The sentence has incorrect verb tense, missing articles, and incorrect phrasing."
-    },
-    {
-      "original": "Then we are displaying our final data frame in that we are selecting the columns that we want in this case employee ID name and location and we are doing the filter where the location is not equal to Bangalore.",
-      "correction": "Then, we are displaying our final data frame, selecting the columns we want (employee ID, name, and location), and filtering the data to include only locations that are not equal to Bangalore.",
-      "explanation": "The sentence has incorrect verb tense, missing articles, and incorrect phrasing."
-    }
-  ],
-  "improved_version": "Hi everybody, welcome back to the channel. Today we are going to solve another Spark question. This question is commonly asked in MNCs and is an ideal question for a fresher or a person who has around one or two years of experience in data engineering.\n\nThis is generally to test your basic knowledge of Spark.\n\nThe question is to return the details of employees whose location is not Bangalore.\n\nIn the 'employee ID name location' column, you have two employees with the locations Pune, Bangalore, Hyderabad, and Mumbai, Bangalore, Pune.\n\nSo you need to return the details of employees whose location is not Bangalore.\n\nFirst, you need to unpack this list of locations and have each location as an individual row. Then, you need to filter out locations that are not equal to Bangalore.\n\nThis is how we are going to solve this question.\n\nThen, I am creating a Spark session with a Spark session dot builder dot get or create.\n\nThe data I am using has a 'location' column. We are using explode to split the locations into different individual rows using a split based on the column.\n\nThen, we are displaying our final data frame, selecting the columns we want (employee ID, name, and location), and filtering the data to include only locations that are not equal to Bangalore.",
-  "overview": "The most important thing to learn from these mistakes is to pay attention to grammar rules, including subject-verb agreement, correct verb tense, and proper use of articles and punctuation. Additionally, avoiding redundancy and using clear and concise language can enhance the overall quality of writing."
-}
+Improved Version Preview:
+Hi everybody, welcome back to the channel. Today we are going to solve another five spark questions and this question is asking like you can expect this question in almost every MNC and this is the mo...
+
+Overview of Issues:
+The most important thing to learn from these mistakes is to ensure proper subject-verb agreement and noun pluralization, as well as maintaining consistent verb tenses throughout the speech.
+
+
+=== Starting Grammar Analysis Test ===
+
+Input text sample:
+
+Hi everybody, welcome back to the channel. Today we are going to solve another five spark question and this question was asking like you can expect this question in almost every MNCs and this is the ...
+
+
+Analysis Results:
+
+Grammar Corrections:
+
+1. Correction:
+   Original: you have two employee with the locations Pune, Bangalore, Hyderabad and Mumbai, Bangalore, Pune.
+   Corrected: you have two employees with the locations Pune, Bangalore, Hyderabad, and Mumbai, Bangalore, Pune.
+   Explanation: The plural form 'employees' should be used to match the number indicated.
+   Mistake Title: Pluralization Errors
+   Mistake Class: Miscellaneous Errors
+
+2. Correction:
+   Original: you need to return the detail of employee whose location is not in Bangalore.
+   Corrected: you need to return the details of employees whose location is not in Bangalore.
+   Explanation: The word 'detail' should be pluralized to 'details' to match the context and 'employee' should be pluralized to 'employees' for consistency.
+   Mistake Title: Pluralization Errors
+   Mistake Class: Miscellaneous Errors
+
+3. Correction:
+   Original: we are doing explode, which is like a splitting the locations into a different individual rows using a split splitting based on the column.
+   Corrected: we are using explode, which is like splitting the locations into different individual rows based on the column.
+   Explanation: Incorrect structure 'a splitting' should be replaced with 'splitting' and 'a different' should be made plural as 'different'.
+   Mistake Title: Incorrect Word Order
+   Mistake Class: Sentence Structure and Phrasing
+
+4. Correction:
+   Original: in that we are selecting the columns that we want in this case employee ID name and location and we are doing
+   Corrected: in that we are selecting the columns that we want in this case: employee ID, name, and location.
+   Explanation: The sentence is incomplete and lacks clarity; a colon and commas are added for proper separation.
+   Mistake Title: Sentence Fragments
+   Mistake Class: Sentence Structure and Phrasing
+
+5. Correction:
+   Original: this question was asking like you can expect this question in almost every MNCs
+   Corrected: this question asks like you can expect this question in almost every MNC
+   Explanation: The verb tense should be present tense to match the context of the ongoing discussion.
+   Mistake Title: Incorrect Use of Tenses
+   Mistake Class: Tense and Verb Form Errors
+
+6. Correction:
+   Original: this is the most ideal question for a fresher or a person who is having experience around one or two years of experience
+   Corrected: this is the most ideal question for a fresher or a person who has experience of around one or two years in data engineering
+   Explanation: The correct form of 'having' should be 'has' for subject-verb agreement and to avoid redundancy in mentioning 'experience' twice.
+   Mistake Title: Subject-Verb Agreement Errors
+   Mistake Class: Subject-Verb Agreement Errors
+
+Improved Version Preview:
+Hi everybody, welcome back to the channel. Today we are going to solve another five spark questions and this question asks like you can expect this question in almost every MNC. This is the most ideal...
+
+Overview of Issues:
+The most important thing to learn from these mistakes is the importance of subject-verb agreement and correct pluralization, which are crucial for clarity and grammatical accuracy in English.
+
+=== Grammar Analysis Test Completed ===
+
+=== Starting Grammar Analysis Test ===
+
+Input text sample:
+
+Hi everybody, welcome back to the channel. Today we are going to solve another five spark question and this question was asking like you can expect this question in almost every MNCs and this is the ...
+
+
+Analysis Results:
+
+Grammar Corrections:
+
+1. Correction:
+   Original: we are going to solve another five spark question
+   Corrected: we are going to solve another five spark questions
+   Explanation: The subject 'we' is plural, so the verb 'are' should be 'are' not 'is'.
+   Mistake Title: Subject-Verb Agreement Errors
+   Mistake Class: Subject-Verb Agreement Errors
+
+2. Correction:
+   Original: this is the most ideal question for a fresher or a person who is having experience around one or two years of experience in data engineering.
+   Corrected: this is the most ideal question for a fresher or a person who has one or two years of experience in data engineering.
+   Explanation: The verb 'is having' should be 'has' because the person has the experience now, not in the past.
+   Mistake Title: Incorrect Use of Tenses
+   Mistake Class: Tense and Verb Form Errors
+
+3. Correction:
+   Original: So this is generally to test your knowledge in basics of five spark in this part basically.
+   Corrected: So this is generally to test your knowledge in the basics of five spark in this part.
+   Explanation: The word 'basics' is uncountable, so it should not have the article 'a' before it.
+   Mistake Title: Incorrect Use of Articles with Uncountable Nouns
+   Mistake Class: Article and Preposition Misuse
+
+4. Correction:
+   Original: First we will create a data frame.
+   Corrected: First, we will create a data frame.
+   Explanation: A comma should be used to separate the two independent clauses.
+   Mistake Title: Missing Conjunctions
+   Mistake Class: Sentence Structure and Phrasing
+
+Improved Version Preview:
+Hi everybody, welcome back to the channel. Today we are going to solve another five spark questions and this question was asking like you can expect this question in almost every MNCs and this is the ...
+
+Overview of Issues:
+The most important thing to learn from these mistakes is to pay attention to subject-verb agreement, verb tense consistency, and the correct use of articles and prepositions. Also, review the rules for countable and uncountable nouns and conjunctions. These corrections will improve the overall clarity and accuracy of your spoken English.
+
+=== Grammar Analysis Test Completed ===
+
+=== Starting Grammar Analysis Test ===
+
+Input text sample:
+
+Hi everybody, welcome back to the channel. Today we are going to solve another five spark question and this question was asking like you can expect this question in almost every MNCs and this is the ...
+
+
+Analysis Results:
+
+Grammar Corrections:
+
+1. Correction:
+   Original: this is the most ideal question for a fresher or a person who is having experience around one or two years of experience in data engineering
+   Corrected: this is the most ideal question for a fresher or a person with around one or two years of experience in data engineering
+   Explanation: Repetitive use of "experience"
+   Mistake Title: Overuse of Fillers or Redundancy
+   Mistake Class: Redundancy and Informal Speech
+
+2. Correction:
+   Original: So this is how we are going to solve this question
+   Corrected: This is how we are going to solve this question
+   Explanation: Incorrect use of "so" - unnecessary in this context
+   Mistake Title: Overuse of Fillers or Redundancy
+   Mistake Class: Redundancy and Informal Speech
+
+3. Correction:
+   Original: You see I have already imported a spark session and you can have your spark SQL functions import
+   Corrected: I have already imported a Spark session and you can import your Spark SQL functions
+   Explanation: Incorrect use of "you see" - unnecessary in this context
+   Mistake Title: Overuse of Fillers or Redundancy
+   Mistake Class: Redundancy and Informal Speech
+
+4. Correction:
+   Original: Then we are displaying our final data frame in that we are selecting the columns that we want in this case employee ID name and location and we are doing
+   Corrected: Then we are displaying our final data frame, selecting the columns we want (employee ID, name, and location), and we are
+   Explanation: Incorrect use of "in that" - unnecessary in this context
+   Mistake Title: Overuse of Fillers or Redundancy
+   Mistake Class: Redundancy and Informal Speech
+
+5. Correction:
+   Original: So this is generally to test your knowledge in basics of five spark in this part basically
+   Corrected: So this is generally to test your knowledge of spark basics in this part
+   Explanation: Incorrect use of "in basics of five spark"
+   Mistake Title: Misplaced Modifiers
+   Mistake Class: Sentence Structure and Phrasing
+
+6. Correction:
+   Original: So first you need to unpack this list of location and have it as an individual row and then you need to filter out that location should not be equal to Bangalore
+   Corrected: So first you need to unpack this list of locations and have each as an individual row, then you need to filter out locations that are equal to Bangalore
+   Explanation: Incorrect use of "that location" - should refer to each row
+   Mistake Title: Misplaced Modifiers
+   Mistake Class: Sentence Structure and Phrasing
+
+7. Correction:
+   Original: we are going to solve another five spark question
+   Corrected: we are going to solve another spark question of five
+   Explanation: Incorrect sentence structure - question should be placed before the number
+   Mistake Title: Incorrect Word Order in Questions
+   Mistake Class: Sentence Structure and Phrasing
+
+8. Correction:
+   Original: Then I'm creating a spark session with a spark session dot builder dot get or create
+   Corrected: Then I am creating a Spark session with a Spark session dot builder dot get or create
+   Explanation: Incorrect use of "I'm" - should be "I am"
+   Mistake Title: Omitting Helping Verbs
+   Mistake Class: Sentence Structure and Phrasing
+
+9. Correction:
+   Original: So the question is you need to return the details of employee whose location is not in Bangalore
+   Corrected: The question is you need to return the details of employees whose location is not Bangalore
+   Explanation: Subject-verb disagreement - "employees" should be used with "need"
+   Mistake Title: Subject-Verb Agreement Errors
+   Mistake Class: Subject-Verb Agreement Errors
+
+10. Correction:
+   Original: So the data I'm taking is we are using with column to add location column and we are doing explode, which is like a splitting the locations into a different individual rows using a split splitting based on the column
+   Corrected: The data I'm taking uses the with column method to add the location column, and we are doing explode to split the locations into different individual rows using a split based on the column
+   Explanation: Incorrect use of "we are" - should be "uses"
+   Mistake Title: Subject-Verb Agreement Errors
+   Mistake Class: Subject-Verb Agreement Errors
+
+Improved Version Preview:
+Hi everybody, welcome back to the channel. Today we are going to solve another spark question of five. This question can be expected in almost every MNC and is especially suitable for a fresher or a p...
+
+Overview of Issues:
+The transcript contains several common grammar errors, including incorrect word order, subject-verb agreement issues, misuse of articles, preposition errors, and redundant wording. It's essential to understand the correct grammar rules to ensure clear and effective communication.
+
+=== Grammar Analysis Test Completed ===
+
+=== Starting Grammar Analysis Test ===
+
+Input text sample:
+
+Hi everybody, welcome back to the channel. Today we are going to solve another five spark question and this question was asking like you can expect this question in almost every MNCs and this is the ...
+
+
+Analysis Results:
+
+Grammar Corrections:
+
+1. Correction:
+   Original: we are going to solve another five spark question
+   Corrected: we are going to solve another five spark questions
+   Explanation: The subject 'spark question' is plural, so the verb 'solve' should be in the plural form.
+   Mistake Title: Subject-Verb Agreement Errors
+   Mistake Class: Subject-Verb Agreement Errors
+
+2. Correction:
+   Original: So if you see the employee ID name location column, you have two employee with the locations
+   Corrected: So if you see the employee ID, name, location column, you have two employees with the locations
+   Explanation: The subject 'you' is singular, so the verb 'have' should be in the singular form.
+   Mistake Title: Subject-Verb Agreement Errors
+   Mistake Class: Subject-Verb Agreement Errors
+
+3. Correction:
+   Original: we are doing explode, which is like a splitting the locations
+   Corrected: we are doing explode, which is like splitting the locations
+   Explanation: The relative pronoun 'which' refers to the noun 'explode', which is singular, so the verb 'splitting' should be in the singular form.
+   Mistake Title: Subject-Verb Agreement Errors
+   Mistake Class: Subject-Verb Agreement Errors
+
+4. Correction:
+   Original: and this is the most ideal question for a fresher or a person who is having
+   Corrected: and this is the most ideal question for a fresher or a person who has
+   Explanation: The subject 'a person who' is in the present tense, so the verb 'having' should be in the present tense as well.
+   Mistake Title: Incorrect Use of Tenses
+   Mistake Class: Tense and Verb Form Errors
+
+5. Correction:
+   Original: So this is generally to test your knowledge in basics of five spark
+   Corrected: So this is generally to test your knowledge in the basics of five spark
+   Explanation: The noun 'basics' is uncountable, so it should not have the article 'a'.
+   Mistake Title: Incorrect Use of Articles with Uncountable Nouns
+   Mistake Class: Article and Preposition Misuse
+
+Improved Version Preview:
+Hi everybody, welcome back to the channel. Today we are going to solve another five spark questions and this question was asking like you can expect this question in almost every MNCs and this is the ...
+
+Overview of Issues:
+The most common grammar mistakes in this text are subject-verb agreement errors, incorrect use of tenses, and incorrect use of articles. It is important to ensure that the subject and verb in a sentence agree in number and that the tense of the verb is consistent throughout the text. Additionally, articles should be used correctly with countable and uncountable nouns.
+
+=== Grammar Analysis Test Completed ===

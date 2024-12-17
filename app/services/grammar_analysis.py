@@ -2,7 +2,9 @@ import os
 import pandas as pd
 from typing import Dict, List
 from dotenv import load_dotenv
-from app.services.llm_services import get_llm_service
+from app.services.llm_services import get_llm_service, GeminiService
+from app.core.prompts import create_grammar_analysis_prompt
+import json
 
 load_dotenv()
 
@@ -10,7 +12,7 @@ class GrammarAnalysisService:
     def __init__(self):
         self.grammar_rules = self._load_grammar_rules()
         self.title_to_class_map = self._create_title_class_map()
-        self.llm_service = get_llm_service()
+        self.llm_service = None  # Initialize lazily
 
     def _load_grammar_rules(self) -> pd.DataFrame:
         """Load and process grammar rules from CSV file"""
@@ -38,38 +40,94 @@ class GrammarAnalysisService:
             rules.append(f"- {row['Mistake Title']}: {row['Why it Happens']}")
         return "\n".join(rules)
 
-    async def analyze_text(self, text: str) -> Dict:
+    def _sort_corrections(self, corrections: List[Dict]) -> List[Dict]:
         """
-        Analyze text for grammar mistakes using the configured LLM
+        Sort corrections based on frequency of class and mistake_title
         
         Args:
-            text (str): Text to analyze
+            corrections (List[Dict]): List of correction dictionaries
             
         Returns:
-            Dict: Analysis results containing mistakes and corrections
+            List[Dict]: Sorted list of corrections
         """
-        try:
-            rules_context = self._create_rules_context()
+        # Count occurrences of classes
+        class_counts = {}
+        title_counts = {}
+        
+        # Count frequencies
+        for correction in corrections:
+            mistake_class = correction.get('mistake_class', 'Unknown')
+            mistake_title = correction.get('mistake_title', 'Unknown')
+            
+            class_counts[mistake_class] = class_counts.get(mistake_class, 0) + 1
+            title_counts[mistake_title] = title_counts.get(mistake_title, 0) + 1
+        
+        # Sort corrections based on class count first, then mistake_title count
+        sorted_corrections = sorted(
+            corrections,
+            key=lambda x: (
+                class_counts.get(x.get('mistake_class', 'Unknown'), 0),
+                title_counts.get(x.get('mistake_title', 'Unknown'), 0)
+            ),
+            reverse=True  # Sort in descending order
+        )
+        
+        return sorted_corrections
+
+    async def analyze_text(self, text: str, provider: str = None, model: str = None) -> Dict:
+        """
+        Analyze text for grammar mistakes
+        
+        Args:
+            text: Text to analyze
+            provider: Optional AI provider to use (openai/gemini)
+            model: Optional model name to use
+        
+        Returns:
+            Dict: Analysis results including corrections and overview
+        """
+        # Get or create LLM service with specified provider and model
+        self.llm_service = get_llm_service(provider=provider, model=model)
+        
+        # Create context with grammar rules
+        rules_context = self._create_rules_context()
+        
+        # Get analysis from LLM
+        if isinstance(self.llm_service, GeminiService):
             analysis = await self.llm_service.analyze_grammar(text, rules_context)
+        else:
+            response = await self.llm_service.generate_response(
+                create_grammar_analysis_prompt(text, rules_context)
+            )
+            try:
+                # Try to parse the JSON response
+                json_response = json.loads(response)
+                analysis = json_response
+            except json.JSONDecodeError:
+                # Try to repair and parse the JSON
+                try:
+                    repaired_json = repair_json(response)
+                    json_response = json.loads(repaired_json)
+                    analysis = json_response
+                except:
+                    return {
+                        "corrections": [],
+                        "overview": "Error analyzing grammar"
+                    }
+        
+        # Add mistake classes based on titles
+        if 'corrections' in analysis:
+            for correction in analysis['corrections']:
+                mistake_title = correction.get('mistake_title')
+                if mistake_title in self.title_to_class_map:
+                    correction['mistake_class'] = self.title_to_class_map[mistake_title]
+                else:
+                    correction['mistake_class'] = "Unknown"  # Fallback if title not found
             
-            # Add mistake classes based on titles
-            if 'corrections' in analysis:
-                for correction in analysis['corrections']:
-                    mistake_title = correction.get('mistake_title')
-                    if mistake_title in self.title_to_class_map:
-                        correction['mistake_class'] = self.title_to_class_map[mistake_title]
-                    else:
-                        correction['mistake_class'] = "Unknown"  # Fallback if title not found
-            
-            return analysis
-        except Exception as e:
-            print(f"Error analyzing grammar: {str(e)}")
-            return {
-                "error": "Failed to analyze grammar",
-                "corrections": [],
-                "improved_version": text,
-                "explanation": "Error occurred during analysis"
-            }
+            # Sort the corrections based on frequency
+            analysis['corrections'] = self._sort_corrections(analysis['corrections'])
+        
+        return analysis
 
 async def test_grammar_analysis():
     """Test the GrammarAnalysisService with real-world text"""
@@ -94,7 +152,7 @@ So the data I'm taking is we are using with column to add location column and we
         print(test_text[:200] + "...\n")  # Show first 200 chars for preview
         
         # Analyze text
-        result = await grammar_service.analyze_text(test_text)
+        result = await grammar_service.analyze_text(test_text, provider="gemini")
         
         # Print results
         print("\nAnalysis Results:")
@@ -107,7 +165,7 @@ So the data I'm taking is we are using with column to add location column and we
             print(f"\n{i}. Correction:")
             print(f"   Original: {correction['original']}")
             print(f"   Corrected: {correction['correction']}")
-            print(f"   Explanation: {correction['explanation']}")
+            print(f"   Explanation: {correction['reason']}")
             print(f"   Mistake Title: {correction['mistake_title']}")
             print(f"   Mistake Class: {correction['mistake_class']}")
         

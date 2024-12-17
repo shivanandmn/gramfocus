@@ -21,18 +21,21 @@ GramFocus is an innovative application that helps users improve their English gr
 ## Local Development Setup
 
 1. Clone the repository:
+
 ```bash
 git clone https://github.com/yourusername/gramfocus.git
 cd gramfocus
 ```
 
 2. Create and configure environment variables:
+
 ```bash
 cp .env.example .env
 # Edit .env with your API keys
 ```
 
 3. Run with Docker Compose:
+
 ```bash
 docker-compose up --build
 ```
@@ -59,15 +62,13 @@ The application is configured for deployment to Google Cloud Run using GitHub Ac
    ```bash
    # Create a new project (if needed)
    gcloud projects create gramfocus-project
-   
+
    # Set the project
    gcloud config set project gramfocus-project
-   
+
    # Enable required APIs
-   gcloud services enable \
-     run.googleapis.com \
-     artifactregistry.googleapis.com
-   
+   gcloud services enable run.googleapis.com artifactregistry.googleapis.com
+
    # Create Artifact Registry repository
    gcloud artifacts repositories create gramfocus \
      --repository-format=docker \
@@ -77,44 +78,33 @@ The application is configured for deployment to Google Cloud Run using GitHub Ac
 ### Service Account Setup
 
 1. **GitHub Actions Deployment Account**:
+
    ```bash
    # Create a service account for GitHub Actions
-   gcloud iam service-accounts create github-actions \
-       --description="Service account for GitHub Actions" \
-       --display-name="GitHub Actions"
+   gcloud iam service-accounts create github-actions --description="Service account for GitHub Actions" --display-name="GitHub Actions"
 
    # Grant necessary permissions
-   gcloud projects add-iam-policy-binding your-project-id \
-       --member="serviceAccount:github-actions@your-project-id.iam.gserviceaccount.com" \
-       --role="roles/run.admin"
+   gcloud projects add-iam-policy-binding openlabel-lab-firebase --member="serviceAccount:github-actions@openlabel-lab-firebase.iam.gserviceaccount.com" --role="roles/run.admin"
 
-   gcloud projects add-iam-policy-binding your-project-id \
-       --member="serviceAccount:github-actions@your-project-id.iam.gserviceaccount.com" \
-       --role="roles/artifactregistry.admin"
+   gcloud projects add-iam-policy-binding openlabel-lab-firebase --member="serviceAccount:github-actions@openlabel-lab-firebase.iam.gserviceaccount.com" --role="roles/artifactregistry.admin"
 
    # Create and download the key
-   gcloud iam service-accounts keys create github-actions-key.json \
-       --iam-account=github-actions@your-project-id.iam.gserviceaccount.com
+   gcloud iam service-accounts keys create github-actions-key.json --iam-account=github-actions@openlabel-lab-firebase.iam.gserviceaccount.com
    ```
-
 2. **Speech-to-Text Service Account**:
+
    ```bash
    # Create a service account for Speech-to-Text
-   gcloud iam service-accounts create speech-to-text \
-       --description="Service account for Speech-to-Text API" \
-       --display-name="Speech to Text"
+   gcloud iam service-accounts create speech-to-text --description="Service account for Speech-to-Text API" --display-name="Speech to Text"
 
    # Grant Speech-to-Text permissions
-   gcloud projects add-iam-policy-binding your-project-id \
-       --member="serviceAccount:speech-to-text@your-project-id.iam.gserviceaccount.com" \
-       --role="roles/speech.client"
+   gcloud projects add-iam-policy-binding openlabel-lab-firebase --member="serviceAccount:speech-to-text@openlabel-lab-firebase.iam.gserviceaccount.com" --role="roles/speech.client"
 
    # Create and download the key
-   gcloud iam service-accounts keys create speech-to-text-key.json \
-       --iam-account=speech-to-text@your-project-id.iam.gserviceaccount.com
+   gcloud iam service-accounts keys create speech-to-text-key.json --iam-account=speech-to-text@openlabel-lab-firebase.iam.gserviceaccount.com
    ```
-
 3. **Set up GitHub Secrets**:
+
    - Open `github-actions-key.json` and copy its content to a GitHub secret named `GCP_SA_KEY`
    - Open `speech-to-text-key.json` and copy its content to a GitHub secret named `GOOGLE_APPLICATION_CREDENTIALS`
    - Add other required secrets:
@@ -152,6 +142,7 @@ gcloud run deploy gramfocus \
 ## API Documentation
 
 Once running, visit:
+
 - Swagger UI: `http://localhost:8000/docs`
 - ReDoc: `http://localhost:8000/redoc`
 

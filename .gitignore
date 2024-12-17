@@ -2,3 +2,5 @@
 */**/__pycache__
 gramfocus.egg-info
 .env
+github-actions-key.json
+speech-to-text-key.json

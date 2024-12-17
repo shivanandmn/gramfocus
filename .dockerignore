@@ -25,3 +25,5 @@ tests
 README.md
 docker-compose.yml
 Dockerfile
+github-actions-key.json
+speech-to-text-key.json
