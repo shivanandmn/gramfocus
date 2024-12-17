@@ -34,7 +34,7 @@ RUN pip install --no-cache-dir -r requirements.txt && \
 RUN mkdir -p uploads && chmod 777 uploads
 
 # Expose port
-EXPOSE 8000
+EXPOSE 8080
 
 # Set the default command
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080"]
