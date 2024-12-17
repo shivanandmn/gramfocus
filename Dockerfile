@@ -4,9 +4,17 @@ FROM python:3.11-slim
 # Set working directory
 WORKDIR /app
 
+# Set build arguments
+ARG OPENAI_API_KEY
+ARG GOOGLE_API_KEY
+ARG GOOGLE_APPLICATION_CREDENTIALS
+
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
+    PYTHONUNBUFFERED=1 \
+    OPENAI_API_KEY=${OPENAI_API_KEY} \
+    GOOGLE_API_KEY=${GOOGLE_API_KEY} \
+    GOOGLE_APPLICATION_CREDENTIALS=${GOOGLE_APPLICATION_CREDENTIALS}
 
 # Install system dependencies
 RUN apt-get update \
@@ -21,10 +29,6 @@ COPY requirements.txt .
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy Speech-to-Text credentials if provided
-ARG GOOGLE_APPLICATION_CREDENTIALS
-COPY speech-to-text-key.json ${GOOGLE_APPLICATION_CREDENTIALS}
-
 # Copy project files
 COPY . .
 
@@ -34,5 +38,5 @@ RUN mkdir -p uploads && chmod 777 uploads
 # Expose port
 EXPOSE 8000
 
-# Command to run the application
+# Set the default command
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
