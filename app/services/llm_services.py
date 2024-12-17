@@ -11,6 +11,7 @@ from dotenv import load_dotenv
 from json_repair import repair_json
 from pydantic import ValidationError
 import asyncio
+import pandas as pd
 
 # Load environment variables from .env file
 load_dotenv()
@@ -29,6 +30,9 @@ class OpenAIService(LLMService):
         self.settings = get_settings()
         self.client = AsyncOpenAI(api_key=self.settings.OPENAI_API_KEY)
         self.model = model or self.settings.OPENAI_CHAT_MODEL
+        # Load grammar rules for mistake class mapping
+        self.grammar_rules = pd.read_csv("data/Updated_Grammar_Mistakes_with_Fixed_Classifications.csv")
+        self.title_to_class_map = dict(zip(self.grammar_rules['Mistake Title'], self.grammar_rules['Class']))
 
     async def generate_response(self, prompt: str) -> str:
         """
@@ -75,6 +79,12 @@ class OpenAIService(LLMService):
             # Parse response
             json_response = json.loads(response.choices[0].message.content)
             
+            # Add mistake classes based on titles
+            if 'corrections' in json_response:
+                for correction in json_response['corrections']:
+                    mistake_title = correction.get('mistake_title')
+                    correction['mistake_class'] = self.title_to_class_map.get(mistake_title, "Unknown")
+            
             # Validate response structure
             validated_response = GrammarAnalysis(**json_response)
             return validated_response.model_dump()
@@ -101,6 +111,9 @@ class GeminiService(LLMService):
         self.settings = get_settings()
         genai.configure(api_key=self.settings.GOOGLE_API_KEY)
         self.model = genai.GenerativeModel(model or self.settings.GEMINI_MODEL)
+        # Load grammar rules for mistake class mapping
+        self.grammar_rules = pd.read_csv("data/Updated_Grammar_Mistakes_with_Fixed_Classifications.csv")
+        self.title_to_class_map = dict(zip(self.grammar_rules['Mistake Title'], self.grammar_rules['Class']))
 
     async def generate_response(self, prompt: str) -> str:
         """
@@ -130,6 +143,12 @@ class GeminiService(LLMService):
                 # Try to parse the JSON response directly
                 json_response = json.loads(response)
                 
+                # Add mistake classes based on titles
+                if 'corrections' in json_response:
+                    for correction in json_response['corrections']:
+                        mistake_title = correction.get('mistake_title')
+                        correction['mistake_class'] = self.title_to_class_map.get(mistake_title, "Unknown")
+                
                 # Validate against Pydantic model
                 analysis = GrammarAnalysis(**json_response)
                 return analysis.model_dump()
@@ -138,6 +157,12 @@ class GeminiService(LLMService):
                 try:
                     repaired_json = repair_json(response)
                     json_response = json.loads(repaired_json)
+                    
+                    # Add mistake classes based on titles
+                    if 'corrections' in json_response:
+                        for correction in json_response['corrections']:
+                            mistake_title = correction.get('mistake_title')
+                            correction['mistake_class'] = self.title_to_class_map.get(mistake_title, "Unknown")
                     
                     # Validate against Pydantic model
                     analysis = GrammarAnalysis(**json_response)

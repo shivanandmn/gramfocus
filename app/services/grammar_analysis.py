@@ -73,7 +73,7 @@ class GrammarAnalysisService:
         
         return sorted_corrections
 
-    async def analyze_text(self, text: str, provider: str = None, model: str = None) -> GrammarAnalysis:
+    async def analyze_text(self, text: str, provider: str = None, model: str = None) -> Dict:
         """
         Analyze text for grammar mistakes
         
@@ -83,7 +83,7 @@ class GrammarAnalysisService:
             model: Optional model name to use
         
         Returns:
-            GrammarAnalysis: Analysis results including corrections and improved version
+            Dict: Analysis results including corrections and improved version
         """
         # Get or create LLM service with specified provider and model
         self.llm_service = get_llm_service(provider=provider, model=model)
@@ -91,51 +91,30 @@ class GrammarAnalysisService:
         # Create context with grammar rules
         rules_context = self._create_rules_context()
         
-        # Get analysis from LLM
+        # Get analysis from LLM - both services already validate and return GrammarAnalysis
         if isinstance(self.llm_service, GeminiService):
-            analysis_dict = await self.llm_service.analyze_grammar(text, rules_context)
+            return await self.llm_service.analyze_grammar(text, rules_context)
         else:
             response = await self.llm_service.generate_response(
                 create_grammar_analysis_prompt(text, rules_context)
             )
             try:
                 # Try to parse the JSON response
-                analysis_dict = json.loads(response)
+                json_response = json.loads(response)
+                analysis = GrammarAnalysis(**json_response)
+                return analysis.model_dump()
             except json.JSONDecodeError:
                 # Try to repair and parse the JSON
                 try:
                     repaired_json = repair_json(response)
-                    analysis_dict = json.loads(repaired_json)
+                    json_response = json.loads(repaired_json)
+                    analysis = GrammarAnalysis(**json_response)
+                    return analysis.model_dump()
                 except:
-                    return GrammarAnalysis(
-                        corrections=[],
-                        improved_version="Error analyzing grammar"
-                    )
-        
-        # Add mistake classes based on titles and create GrammarCorrection objects
-        corrections = []
-        if 'corrections' in analysis_dict:
-            for corr in analysis_dict['corrections']:
-                mistake_title = corr.get('mistake_title')
-                mistake_class = self.title_to_class_map.get(mistake_title, "Unknown")
-                
-                correction = GrammarCorrection(
-                    original=corr.get('original', ''),
-                    correction=corr.get('correction', ''),
-                    reason=corr.get('reason', ''),
-                    mistake_title=mistake_title,
-                    mistake_class=mistake_class
-                )
-                corrections.append(correction)
-            
-            # Sort the corrections based on frequency
-            corrections = self._sort_corrections(corrections)
-        
-        # Create and return GrammarAnalysis object
-        return GrammarAnalysis(
-            corrections=corrections,
-            improved_version=analysis_dict.get('improved_version', text)
-        )
+                    return {
+                        "corrections": [],
+                        "improved_version": "Error analyzing grammar"
+                    }
 
 async def test_grammar_analysis():
     """Test the GrammarAnalysisService with real-world text"""
@@ -169,19 +148,19 @@ So the data I'm taking is we are using with column to add location column and we
             return
             
         print("\nGrammar Corrections:")
-        for i, correction in enumerate(result.corrections, 1):
+        for i, correction in enumerate(result['corrections'], 1):
             print(f"\n{i}. Correction:")
-            print(f"   Original: {correction.original}")
-            print(f"   Corrected: {correction.correction}")
-            print(f"   Explanation: {correction.reason}")
-            print(f"   Mistake Title: {correction.mistake_title}")
-            print(f"   Mistake Class: {correction.mistake_class}")
+            print(f"   Original: {correction['original']}")
+            print(f"   Corrected: {correction['correction']}")
+            print(f"   Explanation: {correction['reason']}")
+            print(f"   Mistake Title: {correction['mistake_title']}")
+            print(f"   Mistake Class: {correction['mistake_class']}")
         
         print("\nImproved Version Preview:")
-        print(result.improved_version[:200] + "...")  # Show first 200 chars
+        print(result['improved_version'][:200] + "...")  # Show first 200 chars
         
         print("\nOverview of Issues:")
-        print(result.overview)
+        print(result.get('overview', 'No overview available'))
         
         print("\n=== Grammar Analysis Test Completed ===")
         
