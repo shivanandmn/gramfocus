@@ -70,9 +70,7 @@ The application is configured for deployment to Google Cloud Run using GitHub Ac
    gcloud services enable run.googleapis.com artifactregistry.googleapis.com
 
    # Create Artifact Registry repository
-   gcloud artifacts repositories create gramfocus \
-     --repository-format=docker \
-     --location=your-region
+   gcloud artifacts repositories create gramfocus --repository-format=docker --location=us-central1
    ```
 
 ### Service Account Setup
