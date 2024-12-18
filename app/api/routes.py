@@ -5,7 +5,13 @@ import os
 from app.services.transcription import get_transcription_service
 from app.services.grammar_analysis import GrammarAnalysisService
 from app.core.config import LLMProvider, TranscriptionProvider, get_settings
-from app.models.grammar import GrammarAnalysis, TranscriptAnalysisRequest
+from app.models.grammar import (
+    GrammarAnalysis,
+    TranscriptAnalysisRequest,
+    AudioAnalysisResponse,
+    ProviderInfo,
+    ProvidersInfo
+)
 
 router = APIRouter()
 transcription_service = get_transcription_service()
@@ -15,7 +21,7 @@ grammar_service = GrammarAnalysisService()
 UPLOAD_DIR = Path("uploads")
 UPLOAD_DIR.mkdir(exist_ok=True)
 
-@router.post("/analyze-audio")
+@router.post("/analyze-audio", response_model=AudioAnalysisResponse)
 async def analyze_audio(
     audio_file: UploadFile = File(...),
     transcription_provider: TranscriptionProvider = Query(default=None),

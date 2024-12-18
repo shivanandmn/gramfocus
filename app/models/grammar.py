@@ -40,3 +40,22 @@ class TranscriptAnalysisRequest(BaseModel):
         None, 
         description="Specific model name to use (e.g., 'gpt-4-mini' for OpenAI or 'gemini-pro' for Gemini)"
     )
+
+
+class ProviderInfo(BaseModel):
+    """Model for provider and model information"""
+    provider: str = Field(..., description="The provider used (openai/google/gemini)")
+    model: str | None = Field(None, description="The specific model used")
+
+
+class ProvidersInfo(BaseModel):
+    """Model for both transcription and analysis provider information"""
+    transcription: ProviderInfo = Field(..., description="Transcription provider and model info")
+    analysis: ProviderInfo = Field(..., description="Analysis provider and model info")
+
+
+class AudioAnalysisResponse(BaseModel):
+    """Model for complete audio analysis response"""
+    transcription: str = Field(..., description="The transcribed text from audio")
+    analysis: GrammarAnalysis = Field(..., description="The grammar analysis results")
+    providers: ProvidersInfo = Field(..., description="Information about providers and models used")
