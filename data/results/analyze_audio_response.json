@@ -1,0 +1,75 @@
+{
+  "transcription": "Today I go to the store and buyed some groceries.",
+  "analysis": {
+    "corrections": [
+      {
+        "original": "this question was asking like you can expect this question in almost every MNCs",
+        "correction": "this question was asked like you can expect this question in almost every MNC",
+        "reason": "The past tense 'was asked' is used because the action of asking happened in the past.",
+        "mistake_title": "Incorrect Use of Tenses",
+        "mistake_class": "Tense and Verb Form Errors"
+      },
+      {
+        "original": "this is the most ideal question for a fresher or a person who is having experience around one or two years of experience in data engineering",
+        "correction": "this is the most ideal question for a fresher or a person who has experience around one or two years of experience in data engineering",
+        "reason": "The present perfect tense 'has experience' is used because the experience continues up to the present.",
+        "mistake_title": "Incorrect Use of Tenses",
+        "mistake_class": "Tense and Verb Form Errors"
+      },
+      {
+        "original": "So this is generally to test your knowledge in basics of five spark in this part basically",
+        "correction": "So this is generally to test your knowledge in the basics of Spark in this part basically",
+        "reason": "The article 'the' is used before 'basics' because it refers to a specific set of basics.",
+        "mistake_title": "Dropping Articles",
+        "mistake_class": "Article and Preposition Misuse"
+      },
+      {
+        "original": "So the question is you need to return the details of employee whose location is not in Bangalore",
+        "correction": "So the question is you need to return the details of employees whose location is not in Bangalore",
+        "reason": "The plural form 'employees' is used because the subject 'details' refers to more than one employee.",
+        "mistake_title": "Subject-Verb Agreement",
+        "mistake_class": "Unknown"
+      },
+      {
+        "original": "So first you need to unpack this list of location and have it as an individual row and then you need to filter out that location should not be equal to Bangalore",
+        "correction": "So first you need to unpack this list of locations and have it as an individual row and then you need to filter out that location should not be equal to Bangalore",
+        "reason": "The plural form 'locations' is used because the subject 'list' refers to more than one location.",
+        "mistake_title": "Pluralization Errors",
+        "mistake_class": "Miscellaneous Errors"
+      },
+      {
+        "original": "So you need to return the detail of employee whose location is not in Bangalore",
+        "correction": "So you need to return the details of employees whose location is not in Bangalore",
+        "reason": "The plural form 'employees' is used because the subject 'details' refers to more than one employee.",
+        "mistake_title": "Subject-Verb Agreement",
+        "mistake_class": "Unknown"
+      },
+      {
+        "original": "So this is how we are going to solve this question. You see I have already imported a spark session and you can have your spark SQL functions import",
+        "correction": "So this is how we are going to solve this question. As you see, I have already imported a Spark session, and you can have your Spark SQL functions imported",
+        "reason": "The conjunction 'and' is used to join two independent clauses.",
+        "mistake_title": "Missing Conjunctions",
+        "mistake_class": "Sentence Structure and Phrasing"
+      },
+      {
+        "original": "First we will create a data frame. So the data I'm taking is we are using with column to add location column and we are doing explode, which is like a splitting the locations into a different individual rows using a split splitting based on the column",
+        "correction": "First, we will create a data frame. The data I'm taking is using the 'withColumn' function to add the 'location' column, and we are using the 'explode' function, which splits the locations into different individual rows using a split based on the column",
+        "reason": "Commas are used to separate items in a list or series.",
+        "mistake_title": "Missing Comma or Periods",
+        "mistake_class": "Unknown"
+      }
+    ],
+    "improved_version": "Hi everybody, welcome back to the channel. Today we are going to solve another five Spark question, and this question was asked like you can expect this question in almost every MNC. This is the most ideal question for a fresher or a person who has experience around one or two years of experience in data engineering. So this is generally to test your knowledge in the basics of Spark in this part basically. So let's see the question. The question is you need to return the details of employees whose location is not in Bangalore. If you see the employee ID name location column, you have two employees with the locations Pune, Bangalore, Hyderabad, and Mumbai, Bangalore, Pune. So you need to return the details of employees whose location is not in Bangalore. So first, you need to unpack this list of locations and have it as an individual row, and then you need to filter out that location should not be equal to Bangalore. So this is how we are going to solve this question. As you see, I have already imported a Spark session, and you can have your Spark SQL functions imported. Then I'm creating a Spark session with a Spark session dot builder dot get or create. First, we will create a data frame. The data I'm taking is using the 'withColumn' function to add the 'location' column, and we are using the 'explode' function, which splits the locations into different individual rows using a split based on the column. Then we are displaying our final data frame, in that we are selecting the columns that we want (in this case, employee ID, name, and location), and we are doing the filter where the location is not equal to Bangalore. So this is our final output. If you like this video, please subscribe to the channel and follow for more content like this. Till then, see you in the next one. Bye.",
+    "overview": "Pay attention to subject-verb agreement, verb tense consistency, and the use of articles. Remember to use singular verbs with singular subjects and plural verbs with plural subjects. Additionally, ensure that verbs agree in tense throughout your writing."
+  },
+  "providers": {
+    "transcription": {
+      "provider": "openai",
+      "model": "whisper-1"
+    },
+    "analysis": {
+      "provider": "openai",
+      "model": "gpt-4"
+    }
+  }
+}

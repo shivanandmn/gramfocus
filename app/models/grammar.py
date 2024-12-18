@@ -59,3 +59,9 @@ class AudioAnalysisResponse(BaseModel):
     transcription: str = Field(..., description="The transcribed text from audio")
     analysis: GrammarAnalysis = Field(..., description="The grammar analysis results")
     providers: ProvidersInfo = Field(..., description="Information about providers and models used")
+
+
+class TranscriptAnalysisResponse(BaseModel):
+    """Model for complete transcript analysis response"""
+    analysis: GrammarAnalysis = Field(..., description="The grammar analysis results")
+    provider_info: ProviderInfo = Field(..., description="Information about the LLM provider and model used")
