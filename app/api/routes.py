@@ -68,7 +68,7 @@ async def analyze_audio(
 
         # Get transcription service with specified provider and model
         transcription = await transcription_service.transcribe_audio(
-            file_path, provider=trans_provider, model=trans_model
+            file_path, model=trans_model
         )
         if not transcription:
             raise HTTPException(status_code=400, detail="Failed to transcribe audio")
