@@ -9,9 +9,43 @@ from ..core.config import get_settings, TranscriptionProvider
 from openai import AsyncOpenAI
 import tempfile
 from fastapi import UploadFile
+from pydub import AudioSegment
+import io
 
 load_dotenv()
 settings = get_settings()
+
+async def convert_audio_to_wav(audio_file: UploadFile) -> tuple[bytes, str]:
+    """
+    Convert any audio format to WAV format using pydub
+    
+    Args:
+        audio_file: Audio file to convert
+        
+    Returns:
+        tuple: (converted audio bytes, original format)
+    """
+    try:
+        # Read the content of the uploaded file
+        content = await audio_file.read()
+        
+        # Get the original format from the filename
+        original_format = audio_file.filename.split('.')[-1].lower()
+        
+        # Convert the audio using pydub
+        audio = AudioSegment.from_file(io.BytesIO(content), format=original_format)
+        
+        # Export as WAV to a bytes buffer
+        wav_buffer = io.BytesIO()
+        audio.export(wav_buffer, format='wav')
+        
+        # Reset the original file's cursor for potential future reads
+        await audio_file.seek(0)
+        
+        return wav_buffer.getvalue(), original_format
+    except Exception as e:
+        print(f"Audio conversion error: {str(e)}")
+        raise ValueError(f"Failed to convert audio format: {str(e)}")
 
 class OpenAITranscriptionService(TranscriptionService):
     def __init__(self):
@@ -27,11 +61,13 @@ class OpenAITranscriptionService(TranscriptionService):
             model: Optional model name to use (defaults to settings)
         """
         try:
-            # Save the uploaded file temporarily
+            # Convert audio to WAV format if it's not already
+            wav_data, original_format = await convert_audio_to_wav(audio_file)
+            
+            # Save the converted WAV data temporarily
             temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".wav")
             try:
-                contents = await audio_file.read()
-                temp_file.write(contents)
+                temp_file.write(wav_data)
                 temp_file.close()
 
                 with open(temp_file.name, "rb") as audio:
@@ -42,6 +78,9 @@ class OpenAITranscriptionService(TranscriptionService):
                 return transcript.text
             finally:
                 os.remove(temp_file.name)
+        except ValueError as ve:
+            print(f"Audio conversion error: {str(ve)}")
+            return None
         except Exception as e:
             print(f"OpenAI Transcription Error: {str(e)}")
             return None
@@ -59,11 +98,13 @@ class GoogleTranscriptionService(TranscriptionService):
             model: Optional model name to use (e.g., 'phone_call', 'video', 'command_and_search')
         """
         try:
-            # Save the uploaded file temporarily
+            # Convert audio to WAV format if it's not already
+            wav_data, original_format = await convert_audio_to_wav(audio_file)
+            
+            # Save the converted WAV data temporarily
             temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".wav")
             try:
-                contents = await audio_file.read()
-                temp_file.write(contents)
+                temp_file.write(wav_data)
                 temp_file.close()
 
                 # Read the audio file
@@ -91,6 +132,9 @@ class GoogleTranscriptionService(TranscriptionService):
                 return transcript.strip()
             finally:
                 os.remove(temp_file.name)
+        except ValueError as ve:
+            print(f"Audio conversion error: {str(ve)}")
+            return None
         except Exception as e:
             print(f"Google Transcription Error: {str(e)}")
             return None

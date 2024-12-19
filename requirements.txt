@@ -21,4 +21,7 @@ pydantic-settings>=2.1.0
 # JSON Processing
 json-repair>=0.30.2
 
+# Audio Processing
+pydub>=0.25.1
+
 pandas>=2.2.3
