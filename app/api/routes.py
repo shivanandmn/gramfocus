@@ -1,4 +1,5 @@
-from fastapi import APIRouter, UploadFile, File, HTTPException, Query
+from fastapi import APIRouter, UploadFile, File, HTTPException, Query, Request
+from fastapi.responses import JSONResponse
 from pathlib import Path
 import aiofiles
 import os
@@ -14,6 +15,10 @@ from app.models.grammar import (
     ProvidersInfo,
     TranscriptAnalysisResponse,
 )
+import asyncio
+import logging
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter()
 transcription_service = get_transcription_service()
@@ -161,4 +166,129 @@ async def analyze_transcript(request: TranscriptAnalysisRequest):
         )
 
     except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/upload-large-audio")
+async def upload_large_audio(
+    request: Request,
+    filename: str,
+    chunk_number: int = Query(...),
+    total_chunks: int = Query(...),
+):
+    """
+    Handle large file uploads in chunks
+    
+    Args:
+        request: The request object containing the file chunk
+        filename: Original filename
+        chunk_number: Current chunk number (0-based)
+        total_chunks: Total number of chunks
+    """
+    settings = get_settings()
+    
+    try:
+        # Create temp directory for chunks if it doesn't exist
+        chunk_dir = UPLOAD_DIR / "chunks" / filename
+        chunk_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Read chunk data
+        chunk_data = await request.body()
+        
+        # Save chunk
+        chunk_file = chunk_dir / f"chunk_{chunk_number}"
+        async with aiofiles.open(chunk_file, 'wb') as f:
+            await f.write(chunk_data)
+        
+        logger.info(f"Saved chunk {chunk_number + 1}/{total_chunks} for {filename}")
+        
+        # If this is the last chunk, combine all chunks
+        if chunk_number == total_chunks - 1:
+            final_file = UPLOAD_DIR / filename
+            
+            # Combine chunks
+            async with aiofiles.open(final_file, 'wb') as outfile:
+                for i in range(total_chunks):
+                    chunk_file = chunk_dir / f"chunk_{i}"
+                    async with aiofiles.open(chunk_file, 'rb') as infile:
+                        await outfile.write(await infile.read())
+            
+            # Clean up chunks
+            for chunk_file in chunk_dir.glob("chunk_*"):
+                os.remove(chunk_file)
+            os.rmdir(chunk_dir)
+            
+            logger.info(f"Combined all chunks for {filename}")
+            
+            return {"status": "completed", "filename": filename}
+        
+        return {"status": "chunk_uploaded", "chunk": chunk_number}
+        
+    except Exception as e:
+        logger.error(f"Error handling chunk upload: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/analyze-large-audio", response_model=AudioAnalysisResponse)
+async def analyze_large_audio(
+    filename: str,
+    transcription_provider: TranscriptionProvider = Query(default=None),
+    transcription_model: str = Query(default=None),
+    analysis_provider: LLMProvider = Query(default=None),
+    analysis_model: str = Query(default=None),
+):
+    """
+    Analyze a previously uploaded large audio file
+    
+    Args:
+        filename: Name of the uploaded file
+        transcription_provider: Provider for transcription (openai/google)
+        transcription_model: Model name for transcription
+        analysis_provider: Provider for grammar analysis (openai/gemini)
+        analysis_model: Model name for analysis
+    """
+    try:
+        settings = get_settings()
+        file_path = UPLOAD_DIR / filename
+        
+        if not file_path.exists():
+            raise HTTPException(status_code=404, detail="File not found")
+            
+        # Use provided values or fallback to defaults from settings
+        trans_provider = transcription_provider or settings.TRANSCRIPTION_PROVIDER
+        trans_model = transcription_model or (
+            settings.OPENAI_WHISPER_MODEL
+            if trans_provider == TranscriptionProvider.OPENAI
+            else None
+        )
+        
+        anal_provider = analysis_provider or settings.LLM_PROVIDER
+        anal_model = analysis_model or (
+            settings.OPENAI_CHAT_MODEL
+            if anal_provider == LLMProvider.OPENAI
+            else settings.GEMINI_MODEL
+        )
+        
+        # Get transcription
+        transcription = await transcription_service.transcribe_audio(
+            file_path, model=trans_model
+        )
+        if not transcription:
+            raise HTTPException(status_code=400, detail="Failed to transcribe audio")
+            
+        # Analyze grammar
+        analysis = await grammar_service.analyze_text(
+            transcription, provider=anal_provider, model=anal_model
+        )
+        
+        # Clean up - delete the audio file
+        os.remove(file_path)
+        
+        return AudioAnalysisResponse(
+            transcript=transcription,
+            analysis=analysis
+        )
+        
+    except Exception as e:
+        logger.error(f"Error analyzing large audio: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))

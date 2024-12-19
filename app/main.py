@@ -6,6 +6,9 @@ import logging.handlers
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.routes import router
 from app.core.config import get_settings
+from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.requests import Request
+from starlette.responses import JSONResponse
 
 # Configure logging
 logging.basicConfig(
@@ -37,7 +40,25 @@ except FileNotFoundError:
     logger.error("Please install ffmpeg to enable audio format conversion")
     sys.exit(1)
 
+# Custom middleware to handle large file uploads
+class FileSizeMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        if request.method == "POST" and "multipart/form-data" in request.headers.get("content-type", ""):
+            if "content-length" in request.headers:
+                content_length = int(request.headers["content-length"])
+                if content_length > settings.MAX_UPLOAD_SIZE:
+                    return JSONResponse(
+                        status_code=413,
+                        content={
+                            "detail": f"File too large. Maximum size allowed is {settings.MAX_UPLOAD_SIZE / (1024 * 1024):.1f}MB"
+                        }
+                    )
+        return await call_next(request)
+
 app = FastAPI(title=settings.APP_NAME, version="1.0.0")
+
+# Add FileSizeMiddleware
+app.add_middleware(FileSizeMiddleware)
 
 # Configure CORS
 app.add_middleware(
