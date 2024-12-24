@@ -130,7 +130,8 @@ class OpenAITranscriptionService(TranscriptionService):
             with open(temp_file.name, "rb") as audio:
                 transcript = await self.client.audio.transcriptions.create(
                     model=kwargs.get('model') or self.settings.OPENAI_WHISPER_MODEL,
-                    file=audio
+                    file=audio,
+                    language="en"
                 )
             return transcript.text
         finally:
@@ -206,7 +207,7 @@ class GoogleTranscriptionService(TranscriptionService):
             config = speech.RecognitionConfig(
                 encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
                 sample_rate_hertz=16000,
-                language_code=kwargs.get('language_code', 'en-US'),
+                language_code=kwargs.get('language_code', 'en-IN'),
                 enable_automatic_punctuation=True,
                 model=kwargs.get('model', 'default')
             )

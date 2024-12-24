@@ -58,13 +58,13 @@ async def analyze_audio(
             else None  # Add Google model default if needed
         )
 
-        anal_provider = analysis_provider or settings.LLM_PROVIDER
-        anal_model = analysis_model or (
-            settings.OPENAI_CHAT_MODEL
-            if anal_provider == LLMProvider.OPENAI
-            else settings.GEMINI_MODEL
-        )
-
+        anal_provider = LLMProvider.GEMINI #analysis_provider or settings.LLM_PROVIDER
+        # anal_model = analysis_model or (
+        #     settings.OPENAI_CHAT_MODEL
+        #     if anal_provider == LLMProvider.OPENAI
+        #     else settings.GEMINI_MODEL
+        # )
+        anal_model = settings.GEMINI_MODEL
         # Save audio file
         file_path = UPLOAD_DIR / audio_file.filename
         async with aiofiles.open(file_path, "wb") as out_file:
